@@ -1,1 +1,25 @@
-<p>products works!</p>
+<h2 class="title">Our Products</h2>
+
+<div class="filters">
+  <button (click)="filterCategory('All')">All</button>
+  <button (click)="filterCategory('Mobile')">Mobile</button>
+  <button (click)="filterCategory('Laptop')">Laptop</button>
+  <button (click)="filterCategory('Audio')">Audio</button>
+</div>
+
+<div *ngIf="loading" class="loading">Loading products...</div>
+
+<div class="product-grid" *ngIf="!loading">
+  <div 
+    class="card" 
+    *ngFor="let p of products"
+    [hidden]="selectedCategory !== 'All' && p.category !== selectedCategory"
+  >
+    <img [src]="p.image" alt="product" />
+    <h3>{{ p.name }}</h3>
+    <p class="price">₹ {{ p.price | currency:'USD' }}</p>
+    <p class="category">{{ p.category }}</p>
+
+    <button [routerLink]="['/products', p.id]">View Details</button>
+  </div>
+</div>
