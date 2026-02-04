@@ -17,7 +17,7 @@
   >
     <img [src]="p.image" alt="product" />
     <h3>{{ p.name }}</h3>
-    <p class="price">₹ {{ p.price | currency:'USD' }}</p>
+    <p class="price">$ {{ p.price | currency:'CAD' }}</p>
     <p class="category">{{ p.category }}</p>
 
     <button [routerLink]="['/products', p.id]">View Details</button>

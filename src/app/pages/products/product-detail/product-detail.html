@@ -1,1 +1,32 @@
-<p>product-detail works!</p>
+<div *ngIf="loading" class="loading">Loading product...</div>
+
+<div *ngIf="!loading && product" class="product-details-container">
+  <!-- Product Image -->
+  <img [src]="product.image" alt="{{ product.name }}" />
+
+  <!-- Product Info -->
+  <div class="details">
+    <h2>{{ product.name }}</h2>
+    <p class="price">$ {{ product.price | currency:'CAD' }}</p>
+    <p class="category"><strong>Category:</strong> {{ product.category }}</p>
+
+    <p class="description">
+      This is a high-quality <strong>{{ product.name }}</strong> you will love!
+      Perfect for your daily use and comes with amazing features.
+    </p>
+
+    <!-- Quantity Selector -->
+    <div class="quantity">
+      <button (click)="decreaseQuantity()">–</button>
+      <span>{{ quantity }}</span>
+      <button (click)="increaseQuantity()">+</button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button (click)="addToCart()">Add to Cart</button>
+      <button class="buy-now" (click)="buyNow()">Buy Now</button>
+      <a routerLink="/products" class="back-btn">← Back to Products</a>
+    </div>
+  </div>
+</div>
