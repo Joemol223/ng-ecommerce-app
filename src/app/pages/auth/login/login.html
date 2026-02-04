@@ -1,1 +1,29 @@
-<p>login works!</p>
+<div class="login-container">
+  <h2>Login to Your Account</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="Enter your email">
+      <div class="error" *ngIf="submitted && f['email'].errors">
+        <span *ngIf="f['email'].errors?.['required']">Email is required</span>
+        <span *ngIf="f['email'].errors?.['email']">Invalid email format</span>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Enter your password">
+      <div class="error" *ngIf="submitted && f['password'].errors">
+        <span *ngIf="f['password'].errors?.['required']">Password is required</span>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">Login</button>
+
+    <p class="register-link">Don't have an account? <a routerLink="/register">Register here</a></p>
+  </form>
+</div>
