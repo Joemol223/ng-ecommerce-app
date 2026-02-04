@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule,RouterModule,CommonModule],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -13,7 +14,7 @@ export class Register {
   registerForm: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -34,10 +35,9 @@ export class Register {
   onSubmit() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      console.log('Form Data:', this.registerForm.value);
-      alert('Registration Successful!');
-      this.registerForm.reset();
-      this.submitted = false;
+      this.auth.register(this.registerForm.value);
+      alert('Registered Successfully!');
+      this.router.navigate(['/login']);
     }
   }
 }

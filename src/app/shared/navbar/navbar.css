@@ -6,6 +6,11 @@
   top: 0;
   z-index: 1000;
 
+  .welcome {
+  font-weight: bold;
+  color: #facc15;
+}
+
   .navbar-container {
     display: flex;
     justify-content: space-between;
