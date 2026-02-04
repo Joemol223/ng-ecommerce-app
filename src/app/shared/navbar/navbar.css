@@ -1,0 +1,105 @@
+.navbar {
+  background-color: #4f46e5;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand a {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+
+      li a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+        &:hover {
+          color: #dbeafe;
+        }
+
+        .cart-count {
+          background-color: #f59e0b;
+          color: #111;
+          padding: 0 6px;
+          border-radius: 50%;
+          font-size: 0.8rem;
+          margin-left: 4px;
+        }
+      }
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+
+      div {
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        transition: 0.4s;
+      }
+
+      .bar1 {
+        transform: rotate(-45deg) translate(-5px, 6px);
+      }
+      .bar2 {
+        opacity: 0;
+      }
+      .bar3 {
+        transform: rotate(45deg) translate(-5px, -6px);
+      }
+    }
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    background-color: #4f46e5;
+
+    li a {
+      padding: 1rem;
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-top: 1px solid #6b21a8;
+
+      .cart-count {
+        background-color: #f59e0b;
+        color: #111;
+        padding: 0 6px;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+
+    .mobile-menu.open { max-height: 500px; }
+  }
+}

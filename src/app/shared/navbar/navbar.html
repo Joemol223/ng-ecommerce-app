@@ -1,0 +1,33 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo / Brand -->
+    <div class="brand">
+      <a routerLink="/">MyStore</a>
+    </div>
+
+    <!-- Desktop Menu -->
+    <ul class="nav-links">
+      <li><a routerLink="/">Home</a></li>
+      <li><a routerLink="/products">Products</a></li>
+      <li><a routerLink="/cart">Cart <span class="cart-count">{{cartItemCount}}</span></a></li>
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/register">Register</a></li>
+    </ul>
+
+    <!-- Mobile Hamburger -->
+    <div class="hamburger" (click)="toggleMenu()">
+      <div [class.bar1]="isMenuOpen"></div>
+      <div [class.bar2]="isMenuOpen"></div>
+      <div [class.bar3]="isMenuOpen"></div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <ul class="mobile-menu" [class.open]="isMenuOpen">
+    <li><a routerLink="/" (click)="toggleMenu()">Home</a></li>
+    <li><a routerLink="/products" (click)="toggleMenu()">Products</a></li>
+    <li><a routerLink="/cart" (click)="toggleMenu()">Cart <span class="cart-count">{{cartItemCount}}</span></a></li>
+    <li><a routerLink="/login" (click)="toggleMenu()">Login</a></li>
+    <li><a routerLink="/register" (click)="toggleMenu()">Register</a></li>
+  </ul>
+</nav>
