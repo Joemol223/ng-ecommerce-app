@@ -1,1 +1,14 @@
-<p>cart works!</p>
+<h2>Cart</h2>
+
+<div *ngIf="cart.length === 0">Your cart is empty</div>
+
+<div *ngIf="cart.length > 0">
+  <div *ngFor="let item of cart">
+    <img [src]="item.product.image" width="50">
+    {{item.product.name}} - {{item.product.price | currency}} x {{item.quantity}}
+    <button (click)="decrease(item)">-</button>
+    <button (click)="increase(item)">+</button>
+    <button (click)="remove(item)">Remove</button>
+  </div>
+  <h3>Total: {{getTotal() | currency}}</h3>
+</div>

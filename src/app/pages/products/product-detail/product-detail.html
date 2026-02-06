@@ -1,32 +1,29 @@
-<div *ngIf="loading" class="loading">Loading product...</div>
+<div *ngIf="isLoading" class="loading">Loading product...</div>
 
-<div *ngIf="!loading && product" class="product-details-container">
-  <!-- Product Image -->
-  <img [src]="product.image" alt="{{ product.name }}" />
+<div *ngIf="!isLoading && product" class="product-detail-card">
 
-  <!-- Product Info -->
-  <div class="details">
-    <h2>{{ product.name }}</h2>
-    <p class="price">$ {{ product.price | currency:'CAD' }}</p>
-    <p class="category"><strong>Category:</strong> {{ product.category }}</p>
+  <img [src]="product.image" alt="{{product.name}}" class="product-image">
 
-    <p class="description">
-      This is a high-quality <strong>{{ product.name }}</strong> you will love!
-      Perfect for your daily use and comes with amazing features.
-    </p>
+  <div class="product-info">
+    <h2>{{product.name}}</h2>
+    <p class="category">Category: {{product.category}}</p>
+    <p class="price">{{product.price | currency}}</p>
 
-    <!-- Quantity Selector -->
+    <!-- Quantity selector -->
     <div class="quantity">
-      <button (click)="decreaseQuantity()">–</button>
-      <span>{{ quantity }}</span>
-      <button (click)="increaseQuantity()">+</button>
+      <button (click)="decrease()">-</button>
+      <span>{{quantity}}</span>
+      <button (click)="increase()">+</button>
     </div>
 
-    <!-- Action Buttons -->
+    <!-- Action buttons -->
     <div class="actions">
-      <button (click)="addToCart()">Add to Cart</button>
-      <button class="buy-now" (click)="buyNow()">Buy Now</button>
-      <a routerLink="/products" class="back-btn">← Back to Products</a>
+      <button class="btn add-cart" (click)="addToCart()">Add to Cart</button>
+      <button class="btn buy-now" (click)="buyNow()">Buy Now</button>
     </div>
+
+    <!-- Back button -->
+    <button class="btn back" routerLink="/products">← Back to Products</button>
   </div>
+
 </div>

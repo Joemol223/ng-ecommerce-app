@@ -1,25 +1,30 @@
-<h2 class="title">Our Products</h2>
+<h2 class="page-title">Our Products</h2>
 
-<div class="filters">
-  <button (click)="filterCategory('All')">All</button>
-  <button (click)="filterCategory('Mobile')">Mobile</button>
-  <button (click)="filterCategory('Laptop')">Laptop</button>
-  <button (click)="filterCategory('Audio')">Audio</button>
+<!-- Category Filter -->
+<div class="filter-bar" *ngIf="categories.length">
+  <button 
+    *ngFor="let cat of categories" 
+    [class.active]="cat === selectedCategory"
+    (click)="filterCategory(cat)">
+    {{cat}}
+  </button>
 </div>
 
-<div *ngIf="loading" class="loading">Loading products...</div>
+<div *ngIf="isLoading" class="loading">Loading products...</div>
 
-<div class="product-grid" *ngIf="!loading">
-  <div 
-    class="card" 
-    *ngFor="let p of products"
-    [hidden]="selectedCategory !== 'All' && p.category !== selectedCategory"
-  >
-    <img [src]="p.image" alt="product" />
-    <h3>{{ p.name }}</h3>
-    <p class="price">$ {{ p.price | currency:'CAD' }}</p>
-    <p class="category">{{ p.category }}</p>
+<div class="product-grid" *ngIf="!isLoading">
+  <div class="product-card" *ngFor="let p of filteredProducts">
+    <img [src]="p.image" alt="{{p.name}}" class="product-image">
 
-    <button [routerLink]="['/products', p.id]">View Details</button>
+    <div class="product-info">
+      <h3 class="product-name">{{p.name}}</h3>
+      <p class="product-category">{{p.category}}</p>
+      <p class="product-price">{{p.price | currency}}</p>
+    </div>
+
+    <div class="product-actions">
+      <button class="btn buy-now" (click)="buyNow(p)">Buy Now</button>
+      <a class="btn details" [routerLink]="['/products', p.id]">View Details</a>
+    </div>
   </div>
 </div>

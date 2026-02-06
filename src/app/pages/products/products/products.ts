@@ -1,32 +1,61 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../../../core/services/product';
+import { CartService } from '../../../core/services/cart';
+import { ProductModel } from '../../../core/models/product';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ProductService } from '../../../core/services/product';
 
 @Component({
-  selector: 'app-products',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './products.html',
-  styleUrl: './products.css'
+  styleUrls: ['./products.css']
 })
 export class Products implements OnInit {
+  products: ProductModel[] = [];
+  filteredProducts: ProductModel[] = [];
+  categories: string[] = [];
+  selectedCategory: string = 'All';
+  isLoading = true;
 
-  products: any[] = [];
-  loading = true;
-  selectedCategory = 'All';
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+    private router: Router
+  ) {}
 
-  constructor(private productService: ProductService) {}
+  ngOnInit(): void {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = data;
 
-  ngOnInit() {
-    this.productService.getProducts().subscribe(data => {
-      this.products = data;
-      this.loading = false;
+        // Extract unique categories for filter
+        this.categories = Array.from(new Set(data.map(p => p.category)));
+        this.categories.unshift('All'); // Add "All" option
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load products', err);
+        this.isLoading = false;
+      }
     });
   }
 
-  filterCategory(cat: string) {
-    this.selectedCategory = cat;
+  filterCategory(category: string) {
+    this.selectedCategory = category;
+    if (category === 'All') {
+      this.filteredProducts = this.products;
+    } else {
+      this.filteredProducts = this.products.filter(p => p.category === category);
+    }
+  }
+
+  addToCart(p: ProductModel) { this.cartService.addToCart(p); }
+
+  buyNow(p: ProductModel) { 
+    this.cartService.addToCart(p); 
+    this.router.navigate(['/cart']); 
   }
 }
-

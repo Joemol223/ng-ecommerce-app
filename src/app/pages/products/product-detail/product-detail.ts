@@ -1,45 +1,53 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
+import { CartService } from '../../../core/services/cart';
+import { ProductModel } from '../../../core/models/product';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-product-detail',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css',
+  styleUrl: './product-detail.css'
 })
-export class ProductDetail implements OnInit{
- product: any;
-  loading = true;
-  quantity = 1; // default quantity
+export class ProductDetail implements OnInit {
+  product?: ProductModel;
+  quantity = 1;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private router: Router,
+    private productService: ProductService,
+    private cartService: CartService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.product = this.productService.getProductById(id);
-    this.loading = false;
+    
+    const p = this.productService.getProductById(id);
+    if(p) {
+      this.product = p;
+    } else {
+      console.error('Product not found');
+    }
+    this.isLoading = false;
   }
 
-  increaseQuantity() {
-    if (this.quantity < 10) this.quantity++;
+  increase() { if(this.quantity < 10) this.quantity++; }
+  decrease() { if(this.quantity > 1) this.quantity--; }
+
+  addToCart() { 
+    if(this.product) {
+      for(let i = 0; i < this.quantity; i++) {
+        this.cartService.addToCart(this.product);
+      }
+    }
   }
 
-  decreaseQuantity() {
-    if (this.quantity > 1) this.quantity--;
-  }
-
-  addToCart() {
-    alert(`${this.quantity} x ${this.product.name} added to cart!`);
-    // TODO: Connect to CartService
-  }
-
-  buyNow() {
-    alert(`Buying ${this.quantity} x ${this.product.name} now!`);
-    // TODO: Redirect to checkout page
+  buyNow() { 
+    this.addToCart(); 
+    this.router.navigate(['/cart']); 
   }
 }
