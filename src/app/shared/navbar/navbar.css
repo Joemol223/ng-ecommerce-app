@@ -5,7 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-
+}
   .welcome {
   font-weight: bold;
   color: #facc15;
@@ -15,7 +15,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+  }
     .brand a {
       font-size: 1.5rem;
       font-weight: bold;
@@ -71,7 +71,15 @@
         transform: rotate(45deg) translate(-5px, -6px);
       }
     }
-  }
+  .cart-count {
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 4px;
+}
+
 
   /* Mobile Menu */
   .mobile-menu {
@@ -107,4 +115,4 @@
 
     .mobile-menu.open { max-height: 500px; }
   }
-}
+

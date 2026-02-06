@@ -1,31 +1,31 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { CartService } from '../../core/services/cart';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule,RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  styleUrls: ['./navbar.css']
 })
 export class Navbar {
   isMenuOpen = false;
+  cartItemCount = 0;
+  user: any;
 
-  cartItemCount = 3; // placeholder, later connect to cart service
-
-  
-  user: any;   // ⭐ store logged-in user
-
-  constructor(private auth: AuthService) {   // ⭐ inject service
+  constructor(private auth: AuthService, private cartService: CartService) {
     this.auth.user$.subscribe(u => this.user = u);
+    this.cartService.cartCount$.subscribe(count => this.cartItemCount = count);
   }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-    logout() {   // ⭐ logout method
+  logout() {
     this.auth.logout();
   }
 }

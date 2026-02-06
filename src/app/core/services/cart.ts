@@ -1,57 +1,65 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ProductModel } from '../models/product';
-import { CartItem } from '../models/cart-item';
+import { ProductModel } from '../../core/models/product';
+import { CartItem } from '../../core/models/cart-item';
 
-@Injectable({ providedIn: 'root' })
+
+@Injectable({
+  providedIn: 'root'
+})
 export class CartService {
-  private cartSubject = new BehaviorSubject<CartItem[]>(this.loadCart());
-  cart$ = this.cartSubject.asObservable();
+  private cartItems: CartItem[] = [];
+  private cartSubject = new BehaviorSubject<CartItem[]>([]);
+  cart$ = this.cartSubject.asObservable(); // ✅ observable for Cart component
 
-  constructor() {}
+  private cartCount = new BehaviorSubject<number>(0);
+  cartCount$ = this.cartCount.asObservable(); // ✅ observable for Navbar
 
-  getCart(): CartItem[] { return this.cartSubject.value; }
-
-  addToCart(product: ProductModel) {
-    const cart = this.getCart();
-    const item = cart.find(i => i.product.id === product.id);
-    if (item) {
-      if (item.quantity < 10) item.quantity++;
-    } else {
-      cart.push({ product, quantity: 1 });
+  constructor() {
+    const saved = localStorage.getItem('cart');
+    if (saved) {
+      this.cartItems = JSON.parse(saved);
+      this.cartSubject.next(this.cartItems);
+      this.cartCount.next(this.cartItems.reduce((acc, i) => acc + i.quantity, 0));
     }
-    this.updateCart(cart);
+  }
+
+  addToCart(product: ProductModel, quantity: number = 1) {
+    const existing = this.cartItems.find(item => item.product.id === product.id);
+    if (existing) {
+      existing.quantity += quantity;
+      if (existing.quantity > 10) existing.quantity = 10; // max 10
+    } else {
+      this.cartItems.push({ product, quantity });
+    }
+    this.saveCart();
   }
 
   updateQuantity(productId: number, quantity: number) {
-    const cart = this.getCart();
-    const item = cart.find(i => i.product.id === productId);
-    if (item && quantity >= 1 && quantity <= 10) item.quantity = quantity;
-    this.updateCart(cart);
+    const item = this.cartItems.find(i => i.product.id === productId);
+    if (item) {
+      item.quantity = Math.min(Math.max(1, quantity), 10); // min 1, max 10
+      this.saveCart();
+    }
   }
 
   removeFromCart(productId: number) {
-    const cart = this.getCart().filter(i => i.product.id !== productId);
-    this.updateCart(cart);
+    this.cartItems = this.cartItems.filter(i => i.product.id !== productId);
+    this.saveCart();
   }
 
-  clearCart() { this.updateCart([]); }
-
-  getTotalPrice(): number {
-    return this.getCart().reduce((t, i) => t + i.product.price * i.quantity, 0);
+  getTotalPrice() {
+    return this.cartItems.reduce((total, i) => total + i.product.price * i.quantity, 0);
   }
 
-  getTotalQuantity(): number {
-    return this.getCart().reduce((t, i) => t + i.quantity, 0);
+  clearCart() {
+    this.cartItems = [];
+    this.saveCart();
   }
 
-  private updateCart(cart: CartItem[]) {
-    this.cartSubject.next([...cart]);
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }
-
-  private loadCart(): CartItem[] {
-    const data = localStorage.getItem('cart');
-    return data ? JSON.parse(data) : [];
+  private saveCart() {
+    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+    this.cartSubject.next(this.cartItems);
+    this.cartCount.next(this.cartItems.reduce((acc, i) => acc + i.quantity, 0));
   }
 }

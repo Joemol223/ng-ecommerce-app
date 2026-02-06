@@ -4,50 +4,53 @@ import { ProductService } from '../../../core/services/product';
 import { CartService } from '../../../core/services/cart';
 import { ProductModel } from '../../../core/models/product';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css'
+  styleUrls: ['./product-detail.css']
 })
 export class ProductDetail implements OnInit {
-  product?: ProductModel;
+  product!: ProductModel;
   quantity = 1;
+  maxQuantity = 10;
   isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    
     const p = this.productService.getProductById(id);
-    if(p) {
+    if (p) {
       this.product = p;
-    } else {
-      console.error('Product not found');
     }
     this.isLoading = false;
   }
 
-  increase() { if(this.quantity < 10) this.quantity++; }
-  decrease() { if(this.quantity > 1) this.quantity--; }
-
-  addToCart() { 
-    if(this.product) {
-      for(let i = 0; i < this.quantity; i++) {
-        this.cartService.addToCart(this.product);
-      }
-    }
+  increase() {
+    if (this.quantity < this.maxQuantity) this.quantity++;
   }
 
-  buyNow() { 
-    this.addToCart(); 
-    this.router.navigate(['/cart']); 
+  decrease() {
+    if (this.quantity > 1) this.quantity--;
+  }
+
+  addToCart() {
+    for (let i = 0; i < this.quantity; i++) {
+      this.cartService.addToCart(this.product);
+    }
+    alert(`${this.quantity} item(s) added to cart!`);
+  }
+
+  buyNow() {
+    this.addToCart();
+    this.router.navigate(['/cart']);
   }
 }
